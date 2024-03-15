@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SHoper.Model;
 
 namespace SHoper.Data
 {
@@ -8,5 +9,8 @@ namespace SHoper.Data
           : base(options)
         {
         }
+        public DbSet<UserAsClient> UserAsClient { get; set; } = default!;
+        public DbSet<Items> Items { get; set; } = default!;
+        
     }
 }

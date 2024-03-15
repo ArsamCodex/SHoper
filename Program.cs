@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using SHoper;
 using SHoper.Areas.Identity;
 using SHoper.Data;
-
-
+using SHoper.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +28,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<InterfaceOne,InterfaceIMPL>();
 
 var app = builder.Build();
 
@@ -62,6 +63,6 @@ app.Run();
  * Add-Migration FirstComitCOmleteDatabase -Context ApplicationDbContext
  * Update-Database -Context ApplicationDbContext
  * 
- * Add-Migration Armin -Context DefaultConnection
- * Update-Database -Context DefaultConnection
+ * Add-Migration Armin -Context ApplicationDbMyData
+ * Update-Database -Context ApplicationDbMyData
  * */
