@@ -4,6 +4,6 @@ namespace SHoper.Interfaces
 {
     public interface InterfaceOne
     {
-        public List<Items>? Items();
+        public  Task<List<Items>>? Items();
     }
 }

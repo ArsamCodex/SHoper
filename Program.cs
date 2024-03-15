@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
-using SHoper;
 using SHoper.Areas.Identity;
 using SHoper.Data;
 using SHoper.Interfaces;
@@ -27,8 +26,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddScoped<InterfaceOne,InterfaceIMPL>();
+builder.Services.AddScoped<SHoper.Interfaces.InterfaceIMPL, InterfaceIMPL>();
 
 var app = builder.Build();
 

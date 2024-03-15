@@ -1,0 +1,38 @@
+﻿@page "/Products"
+@inject SHoper.Interfaces.InterfaceIMPL _interface
+@using SHoper.Model
+@using Microsoft.EntityFrameworkCore;
+
+
+<h1>Products</h1>
+
+@if (items != null)
+{
+    foreach (var item in items)
+    {
+        <p>@item.ItemName</p>
+        <p>@item.ItemPrice</p>
+    }
+}
+else
+{
+    <p>Loading...</p>
+}
+
+
+
+@code {
+    private List<Items> items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await ItemsToShow();
+    }
+
+
+
+    public async   Task<List<Items>> ItemsToShow()
+    {
+        return await _interface.Items();
+    }
+}
