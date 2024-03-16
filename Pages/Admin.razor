@@ -1,0 +1,30 @@
+﻿@page "/Admin"
+@inject UserManager<IdentityUser> UserManager
+@using Microsoft.AspNetCore.Identity
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "Admin")]
+@userId
+@EmailToGet
+@code {
+    private string userId;
+    public string EmailToGet { get; set; }
+
+    private IdentityUser user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // user = await UserManager.FindByIdAsync(UserNameID.ToString());
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userPrincipal = authState.User;
+
+        if (userPrincipal.Identity.IsAuthenticated)
+        {
+            var user = await UserManager.GetUserAsync(userPrincipal);
+            EmailToGet = user.Email.ToString();
+            userId = user.Id.ToString();
+
+        }
+    }
+    }

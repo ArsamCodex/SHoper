@@ -12,8 +12,8 @@ using SHoper.Data;
 namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 {
     [DbContext(typeof(ApplicationDbMyData))]
-    [Migration("20240315230943_Datamodl1")]
-    partial class Datamodl1
+    [Migration("20240316123315_D3")]
+    partial class D3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,26 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SHoper.Model.Basket", b =>
+                {
+                    b.Property<int>("BasketID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BasketID"));
+
+                    b.Property<int?>("UserAsClientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BasketID");
+
+                    b.HasIndex("UserAsClientId")
+                        .IsUnique()
+                        .HasFilter("[UserAsClientId] IS NOT NULL");
+
+                    b.ToTable("Baskets");
+                });
+
             modelBuilder.Entity("SHoper.Model.Items", b =>
                 {
                     b.Property<int>("ItemsID")
@@ -32,6 +52,9 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemsID"));
+
+                    b.Property<int?>("BasketId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
@@ -42,12 +65,9 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
                     b.Property<double>("ItemPrice")
                         .HasColumnType("float");
 
-                    b.Property<int?>("UserAsClientID")
-                        .HasColumnType("int");
-
                     b.HasKey("ItemsID");
 
-                    b.HasIndex("UserAsClientID");
+                    b.HasIndex("BasketId");
 
                     b.ToTable("Items");
                 });
@@ -65,21 +85,35 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 
                     b.HasKey("UserAsClientID");
 
-                    b.ToTable("UserAsClient");
+                    b.ToTable("UserAsClients");
+                });
+
+            modelBuilder.Entity("SHoper.Model.Basket", b =>
+                {
+                    b.HasOne("SHoper.Model.UserAsClient", "UserAsClient")
+                        .WithOne("Basket")
+                        .HasForeignKey("SHoper.Model.Basket", "UserAsClientId");
+
+                    b.Navigation("UserAsClient");
                 });
 
             modelBuilder.Entity("SHoper.Model.Items", b =>
                 {
-                    b.HasOne("SHoper.Model.UserAsClient", "UserClient")
-                        .WithMany("Items")
-                        .HasForeignKey("UserAsClientID");
+                    b.HasOne("SHoper.Model.Basket", "Basket")
+                        .WithMany("Item")
+                        .HasForeignKey("BasketId");
 
-                    b.Navigation("UserClient");
+                    b.Navigation("Basket");
+                });
+
+            modelBuilder.Entity("SHoper.Model.Basket", b =>
+                {
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("SHoper.Model.UserAsClient", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("Basket");
                 });
 #pragma warning restore 612, 618
         }

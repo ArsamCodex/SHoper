@@ -6,12 +6,9 @@
         public string? ItemName { get; set; }
         public double ItemPrice { get; set; }
         public string? ImagePath { get; set; }
+        public virtual Basket? Basket { get; set; }
+        public int? BasketId { get; set; }
 
 
-        // Foreign key
-        public int? UserAsClientID { get; set; }
-
-        // Navigation property
-        public UserAsClient? UserClient { get; set; }
     }
 }

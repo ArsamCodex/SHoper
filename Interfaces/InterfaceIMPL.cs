@@ -15,7 +15,8 @@ namespace SHoper.Interfaces
         }
         public async Task<List<Items>>? Items()
         {
-            return await _context.Items.Where(c => c.UserAsClientID == null).ToListAsync();
+            return await _context.Items.Where(c => c.BasketId == null).ToListAsync();
+         
         }
     }
 }

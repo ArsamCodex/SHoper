@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Component\" />
     <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
