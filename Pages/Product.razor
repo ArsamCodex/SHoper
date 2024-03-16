@@ -2,23 +2,39 @@
 @inject SHoper.Interfaces.InterfaceIMPL _interface
 @using SHoper.Model
 @using Microsoft.EntityFrameworkCore;
+@attribute [Authorize(Roles = "Admin")]
 
 
 <h1>Products</h1>
+<style>
+    .item-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* 6 columns with equal width */
+        gap: 10px; /* Gap between items */
+    }
 
+    .item-container {
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+</style>
 @if (items != null)
 {
-    foreach (var item in items)
-    {
-        <p>@item.ItemName</p>
-        <p>@item.ItemPrice</p>
-    }
+    <div class="item-grid">
+        @foreach (var item in items)
+        {
+            <div class="item-container">
+                <p>Name :@item.ItemName</p>
+                <p>Price :@item.ItemPrice</p>
+                <p>Image :@item.ImagePath</p>
+            </div>
+        }
+    </div>
 }
 else
 {
     <p>Loading...</p>
 }
-
 
 
 @code {
