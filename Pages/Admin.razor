@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin")]
-
+ 
 @if (Users != null && Users.Any())
 {
     <table class="table">
