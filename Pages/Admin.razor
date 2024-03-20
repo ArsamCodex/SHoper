@@ -13,6 +13,7 @@
             <tr>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Action</th>
                 <!-- Add additional columns as needed -->
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <tr>
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
+                    <button class="button" @onclick="() => RedirectToNextPage(user.Email)">Click me</button>
                     <!-- Add additional columns as needed -->
                 </tr>
             }
@@ -35,6 +37,7 @@ else
 @EmailToGet
 @code {
     private string userId;
+    [Parameter]
     public string EmailToGet { get; set; }
 
     public List<IdentityUser> Users { get; set; }
@@ -64,4 +67,9 @@ else
         return await UserManager.Users.ToListAsync();
         
     }
+    private void RedirectToNextPage(string userEmail)
+    {
+        NavigationManager.NavigateTo($"/NextPage/{Uri.EscapeDataString(userEmail)}");
+    }
+
 }
