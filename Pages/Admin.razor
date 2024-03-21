@@ -1,20 +1,22 @@
-﻿@page "/Admin"
+﻿<!-- Admin.razor -->
+@page "/Admin"
 @inject UserManager<IdentityUser> UserManager
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore;
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin")]
- 
+@using SHoper.Component
+
 @if (Users != null && Users.Any())
 {
+
     <table class="table">
         <thead>
             <tr>
                 <th>Username</th>
                 <th>Email</th>
                 <th>Action</th>
-                <!-- Add additional columns as needed -->
             </tr>
         </thead>
         <tbody>
@@ -23,8 +25,9 @@
                 <tr>
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
-                    <button class="button" @onclick="() => RedirectToNextPage(user.Email)">Click me</button>
-                    <!-- Add additional columns as needed -->
+                    <td>
+                        <button class="button()" @onclick="OpenForm">Click me</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -34,42 +37,36 @@ else
 {
     <p>No users found.</p>
 }
-@EmailToGet
+
 @code {
     private string userId;
-    [Parameter]
-    public string EmailToGet { get; set; }
-
     public List<IdentityUser> Users { get; set; }
-
+    private bool showForm = false;
     private IdentityUser user;
+    private IdentityUser selectedUser; // Track the selected user for the form
 
     protected override async Task OnInitializedAsync()
     {
-        // user = await UserManager.FindByIdAsync(UserNameID.ToString());
-
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userPrincipal = authState.User;
 
         if (userPrincipal.Identity.IsAuthenticated)
         {
             var user = await UserManager.GetUserAsync(userPrincipal);
-            EmailToGet = user.Email.ToString();
             userId = user.Id.ToString();
 
-            Users = await UsersToSHow();
+            Users = await UsersToShow();
         }
-
-
     }
-    public async Task<List<IdentityUser>> UsersToSHow()
+
+    public async Task<List<IdentityUser>> UsersToShow()
     {
         return await UserManager.Users.ToListAsync();
-        
-    }
-    private void RedirectToNextPage(string userEmail)
-    {
-        NavigationManager.NavigateTo($"/NextPage/{Uri.EscapeDataString(userEmail)}");
     }
 
+    // Method to set selected user and open the form
+    private void OpenForm()
+    {
+        showForm = true;
+    }
 }
