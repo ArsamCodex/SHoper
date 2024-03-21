@@ -1,0 +1,25 @@
+﻿<h3>RandamNumberContainer</h3>
+
+<RandomNumberGenerator OnRandomGenerated="HandleRandomNumberGenerated" GenerationNumberChanged="HandleRandomNumberChanged" />
+
+<p>@randomNumber</p>
+<button @onclick="GenerateRandomNumber" disabled="@generatingNumber" >Start bet</button>
+@code {
+    private int randomNumber;
+    private bool generatingNumber = false;
+
+    private async Task HandleRandomNumberGenerated(int number)
+    {
+        randomNumber = number ;
+        generatingNumber = false;
+    }
+
+    private void HandleRandomNumberChanged(bool isGeneratng)
+    {
+        generatingNumber = isGeneratng;
+    }
+    private async Task GenerateRandomNumber()
+    {
+        generatingNumber = true;
+    }
+}

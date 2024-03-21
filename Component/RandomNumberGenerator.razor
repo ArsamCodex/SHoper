@@ -1,80 +1,56 @@
-﻿<!-- RandomNumberGenerator.razor -->
-@using System.Threading.Tasks
-@using Microsoft.AspNetCore.Components
+﻿<h3>RandomNumberGenerator</h3>
 
-<h3>Random Number Generator</h3>
+<input type="text" @bind="userNumbers" placeholder="your bet please"/> 
+<button @onclick="GenerateRandomNumber">Start</button>
 
-<!-- Show the image while waiting -->
-@if (generatingNumber)
+@if (generatingNmber)
 {
-    <img src="casino.jpg" alt="Loading..." />
+    <img src="casino.jpg" als="Loading">
 }
-else
-{
-    <div>
-        <input type="text" @bind="userNumbers" placeholder="Enter numbers separated by commas" />
-        <button @onclick="GenerateRandomNumber">Generate Random Number</button>
-    </div>
-}
-
-@if (!string.IsNullOrWhiteSpace(winningNumberMessage))
-{
-    <p>@winningNumberMessage</p>
-}
-
 @code {
-    [Parameter]
-    public EventCallback<int> OnRandomNumberGenerated { get; set; }
 
     [Parameter]
-    public EventCallback<bool> GeneratingNumberChanged { get; set; }
+    public EventCallback<int> OnRandomGenerated{ get; set; }
 
-    private bool generatingNumber = false; // Flag to track generation process
-    private string userNumbers = ""; // Input field for user numbers
-    private string winningNumberMessage = ""; // Message for the winning number
+    [Parameter]
+    public EventCallback<bool> GenerationNumberChanged { get; set; }
+
+    private bool generatingNmber = false;
+    public string userNumbers = "";
+    public string winningNumberMessage = ""; 
 
     private async Task GenerateRandomNumber()
     {
-        if (!generatingNumber)
+        generatingNmber = true;
+        await GenerationNumberChanged.InvokeAsync(true);
+
+        await Task.Delay(5000);
+        string[] numbersArray = userNumbers.Split(',');
+        List<int> numbers = new List<int>();
+        foreach (string numberString in numbersArray)
         {
-            // Set the flag to indicate number generation is in progress
-            generatingNumber = true;
-            await GeneratingNumberChanged.InvokeAsync(true);
-
-            await Task.Delay(5000); // Wait for 5 seconds
-
-            // Split the user input string by commas and parse the numbers
-            string[] numbersArray = userNumbers.Split(',');
-            List<int> numbers = new List<int>();
-
-            foreach (string numberString in numbersArray)
+            if(int.TryParse(numberString.Trim(),out int number))
             {
-                if (int.TryParse(numberString.Trim(), out int number))
-                {
-                    numbers.Add(number);
-                }
+                numbers.Add(number);
             }
-
-            // Generate a random number from the user input numbers
-            Random random = new Random();
-            int randomNumberIndex = random.Next(0, 37);
-         //   int randomNumber = numbers[randomNumberIndex];
-
-            // Check if the random number is in the user-provided list
-            if (numbers.Contains(randomNumberIndex))
-            {
-                winningNumberMessage = $"Congratulations! {randomNumberIndex} is the winning number!";
-            }
-            else
-            {
-                winningNumberMessage = ""; // Reset winning number message
-            }
-
-            // Emit the random number using the event callback
-            await OnRandomNumberGenerated.InvokeAsync(randomNumberIndex);
-
-            generatingNumber = false; // Reset flag
-            await GeneratingNumberChanged.InvokeAsync(false);
         }
+
+        Random random = new Random();
+        int randomGenerateIndexNumber = random.Next(0, 37);
+        if (numbers.Contains(randomGenerateIndexNumber))
+        {
+            winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr ";
+
+        }
+        else
+        {
+            winningNumberMessage = "";
+        }
+
+        await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);
+        generatingNmber = false;
+        await GenerationNumberChanged.InvokeAsync(false);
+
     }
+
 }
