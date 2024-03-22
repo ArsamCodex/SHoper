@@ -1,12 +1,17 @@
 ﻿<h3>RandomNumberGenerator</h3>
 
-<input type="text" @bind="userNumbers" placeholder="your bet please"/> 
-<button @onclick="GenerateRandomNumber">Start</button>
+
 
 @if (generatingNmber)
 {
     <img src="casino.jpg" als="Loading">
 }
+else
+{
+    <input type="text" @bind="userNumbers" placeholder="your bet please" />
+    <button @onclick="GenerateRandomNumber" disabled="@generatingNmber">Start</button>
+}
+@winningNumberMessage
 @code {
 
     [Parameter]
@@ -44,7 +49,7 @@
         }
         else
         {
-            winningNumberMessage = "";
+            winningNumberMessage = $"You have losed !  {randomGenerateIndexNumber} is the wining numnebr ";
         }
 
         await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);
@@ -52,5 +57,54 @@
         await GenerationNumberChanged.InvokeAsync(false);
 
     }
+    public int CalculateReward(int winningNumber, Bet bet)
+    {
+        int reward = 0;
+        foreach (int number in bet.Numbers)
+        {
+            if (number == winningNumber)
+            {
+                reward += bet.Amount * 36; // Payout for exact number bet
+            }
+        }
+
+        // Check for bets on groups of nearby numbers
+        foreach (int number in bet.Numbers)
+        {
+            if (IsNearbyNumber(number, winningNumber))
+            {
+                reward += bet.Amount * 2; // Payout for nearby number bet
+            }
+        }
+
+        return reward;
+    }
+
+    private bool IsNearbyNumber(int selectedNumber, int winningNumber)
+    {
+        // Check if the selected number is adjacent to the winning number
+        int[] row = GetRow(selectedNumber);
+        foreach (int number in row)
+        {
+            if (number == winningNumber + 1 || number == winningNumber - 1)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int[] GetRow(int selectedNumber)
+    {
+        // Return the row containing the selected number
+        if (selectedNumber == 1 || selectedNumber == 4 || selectedNumber == 7 || selectedNumber == 10 || selectedNumber == 13 || selectedNumber == 16 || selectedNumber == 19 || selectedNumber == 22 || selectedNumber == 25 || selectedNumber == 28 || selectedNumber == 31 || selectedNumber == 34)
+            return new int[] { 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34 };
+        else if (selectedNumber == 2 || selectedNumber == 5 || selectedNumber == 8 || selectedNumber == 11 || selectedNumber == 14 || selectedNumber == 17 || selectedNumber == 20 || selectedNumber == 23 || selectedNumber == 26 || selectedNumber == 29 || selectedNumber == 32 || selectedNumber == 35)
+            return new int[] { 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35 };
+        else
+            return new int[] { 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36 };
+    }
+
+
 
 }

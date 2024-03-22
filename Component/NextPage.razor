@@ -1,14 +1,15 @@
-﻿@page "/NextPage/{UserEmail}"
+﻿@page "/NextPage/{UserId}"
 @using Microsoft.AspNetCore.Components
 @inject NavigationManager NavigationManager
 
 <h1>Welcome to Next Page</h1>
 
-<p>The user's email is: @UserEmail</p>
+<p>The user's email is: @userid</p>
 
+<SHoper.Component.AdminComponents.ChangeUserRole UserId="@userid"></SHoper.Component.AdminComponents.ChangeUserRole>
 @code {
     [Parameter]
-    public string UserEmail { get; set; }
+    public string userid { get; set; }
 
     protected override Task OnParametersSetAsync()
     {

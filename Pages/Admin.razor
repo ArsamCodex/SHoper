@@ -26,7 +26,7 @@
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
                     <td>
-                        <button class="button()" @onclick="OpenForm">Click me</button>
+                        <button class="button" @onclick="() => RedirectToNextPage(user.Id)">Click me</button>
                     </td>
                 </tr>
             }
@@ -64,9 +64,9 @@ else
         return await UserManager.Users.ToListAsync();
     }
 
-    // Method to set selected user and open the form
-    private void OpenForm()
+    private void RedirectToNextPage(string userId)
     {
-        showForm = true;
+        NavigationManager.NavigateTo($"/NextPage/{Uri.EscapeDataString(userId)}");
     }
+
 }

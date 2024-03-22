@@ -1,0 +1,73 @@
+﻿
+@using System.Threading.Tasks
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<IdentityUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@inject NavigationManager NavigationManager
+@inject SHoper.Data.ApplicationDbContext _context
+<h3>Change User Role</h3>
+
+<p>Current Role: @CurrentRole</p>
+
+<select @bind="SelectedRole">
+    @if (Roles != null)
+    {
+        @foreach (var role in Roles)
+        {
+            <option value="@role.Name">@role.Name</option>
+        }
+    }
+</select>
+
+<button @onclick="ChangeRole">Change Role</button>
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+
+
+    private string? SelectedRole { get; set; }
+    private string? CurrentRole;// New property to store current role
+    private List<IdentityRole> Roles { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userRole = await _context.UserRoles
+                                     .Where(c => c.UserId ==UserId)
+                                     .Select(c => c.RoleId)
+                                     .FirstOrDefaultAsync();
+
+        var roleName = await _context.Roles
+                                     .Where(r => r.Id == userRole)
+                                     .Select(r => r.Name)
+                                     .FirstOrDefaultAsync();
+
+        CurrentRole = roleName;
+
+        // Initialize the Roles list before accessing it
+        Roles = await RoleManager.Roles.ToListAsync();
+    }
+    private async Task ChangeRole()
+    {
+        var user = await UserManager.FindByIdAsync(UserId);
+
+        if (user != null)
+        {
+            // Remove the user from all existing roles
+            var userRoles = await UserManager.GetRolesAsync(user);
+            await UserManager.RemoveFromRolesAsync(user, userRoles);
+
+            // Add the user to the selected role
+            await UserManager.AddToRoleAsync(user, SelectedRole);
+
+            NavigationManager.NavigateTo("/Admin");
+        }
+        else
+        {
+            // Handle user not found
+        }
+    }
+}

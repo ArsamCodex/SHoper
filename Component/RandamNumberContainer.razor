@@ -3,7 +3,7 @@
 <RandomNumberGenerator OnRandomGenerated="HandleRandomNumberGenerated" GenerationNumberChanged="HandleRandomNumberChanged" />
 
 <p>@randomNumber</p>
-<button @onclick="GenerateRandomNumber" disabled="@generatingNumber" >Start bet</button>
+
 @code {
     private int randomNumber;
     private bool generatingNumber = false;
