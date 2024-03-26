@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SHoper.Areas.Identity;
 using SHoper.Data;
 using SHoper.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 
 builder.Services.AddRazorPages();

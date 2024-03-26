@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SHoper.Data;
 
@@ -11,9 +12,11 @@ using SHoper.Data;
 namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 {
     [DbContext(typeof(ApplicationDbMyData))]
-    partial class ApplicationDbMyDataModelSnapshot : ModelSnapshot
+    [Migration("20240323032429_ClassEmpAndMore")]
+    partial class ClassEmpAndMore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,6 +43,30 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
                         .HasFilter("[UserAsClientId] IS NOT NULL");
 
                     b.ToTable("Baskets");
+                });
+
+            modelBuilder.Entity("SHoper.Model.Emplyee.Department", b =>
+                {
+                    b.Property<int>("DepartmentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentID"));
+
+                    b.Property<string>("DepartmentName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmployeeTaskID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeesEmployeeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("DepartmentID");
+
+                    b.HasIndex("EmployeesEmployeeID");
+
+                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("SHoper.Model.Emplyee.Employee", b =>
@@ -99,7 +126,10 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VacationID"));
 
-                    b.Property<int>("EmployeeID")
+                    b.Property<int>("EmployeeTaskID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeesEmployeeID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("From")
@@ -113,7 +143,7 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 
                     b.HasKey("VacationID");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeesEmployeeID");
 
                     b.ToTable("Vacation");
                 });
@@ -170,6 +200,15 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
                     b.Navigation("UserAsClient");
                 });
 
+            modelBuilder.Entity("SHoper.Model.Emplyee.Department", b =>
+                {
+                    b.HasOne("SHoper.Model.Emplyee.Employee", "Employees")
+                        .WithMany("Departments")
+                        .HasForeignKey("EmployeesEmployeeID");
+
+                    b.Navigation("Employees");
+                });
+
             modelBuilder.Entity("SHoper.Model.Emplyee.EmployeeTask", b =>
                 {
                     b.HasOne("SHoper.Model.Emplyee.Employee", "Employees")
@@ -185,9 +224,7 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
                 {
                     b.HasOne("SHoper.Model.Emplyee.Employee", "Employees")
                         .WithMany("Vacations")
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EmployeesEmployeeID");
 
                     b.Navigation("Employees");
                 });
@@ -208,6 +245,8 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 
             modelBuilder.Entity("SHoper.Model.Emplyee.Employee", b =>
                 {
+                    b.Navigation("Departments");
+
                     b.Navigation("Tasks");
 
                     b.Navigation("Vacations");

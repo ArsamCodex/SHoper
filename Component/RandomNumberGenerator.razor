@@ -15,14 +15,14 @@ else
 @code {
 
     [Parameter]
-    public EventCallback<int> OnRandomGenerated{ get; set; }
+    public EventCallback<int> OnRandomGenerated { get; set; }
 
     [Parameter]
     public EventCallback<bool> GenerationNumberChanged { get; set; }
 
     private bool generatingNmber = false;
     public string userNumbers = "";
-    public string winningNumberMessage = ""; 
+    public string winningNumberMessage = "";
 
     private async Task GenerateRandomNumber()
     {
@@ -34,7 +34,7 @@ else
         List<int> numbers = new List<int>();
         foreach (string numberString in numbersArray)
         {
-            if(int.TryParse(numberString.Trim(),out int number))
+            if (int.TryParse(numberString.Trim(), out int number))
             {
                 numbers.Add(number);
             }
@@ -42,14 +42,17 @@ else
 
         Random random = new Random();
         int randomGenerateIndexNumber = random.Next(0, 37);
+
+        var IncomingColor = GetColor(randomGenerateIndexNumber);
         if (numbers.Contains(randomGenerateIndexNumber))
         {
-            winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr ";
+           
+            winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} ";
 
         }
         else
         {
-            winningNumberMessage = $"You have losed !  {randomGenerateIndexNumber} is the wining numnebr ";
+            winningNumberMessage = $"You have losed !  {randomGenerateIndexNumber} is the wining numnebr . Color IS {IncomingColor}";
         }
 
         await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);
@@ -57,6 +60,40 @@ else
         await GenerationNumberChanged.InvokeAsync(false);
 
     }
-  
+    public enum Color
+    {
+        Red,
+        Black,
+        Green
+    }
+    public static Color GetColor(int number)
+    {
+        switch (number)
+        {
+            case 0:
+                return Color.Black;
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 9:
+            case 12:
+            case 14:
+            case 16:
+            case 19:
+            case 21:
+            case 23:
+            case 25:
+            case 27:
+            case 30:
+            case 32:
+            case 34:
+            case 36:
+                return Color.Red;
+                default:
+                return Color.Black;
 
+        }
+    }
 }
+

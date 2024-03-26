@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SHoper.Model;
+using SHoper.Model.Emplyee;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SHoper.Data
 {
@@ -13,8 +15,21 @@ namespace SHoper.Data
         public DbSet<Items> Items { get; set; } = default!;
 
         public DbSet<Basket> Baskets { get; set; } = default!;
+        public DbSet<Employee> Employee { get; set; } = default!;
+       // public DbSet<Department> Department { get; set; } = default!;
+        public DbSet<Vacation> Vacation { get; set; } = default!;
+        public DbSet<EmployeeTask> Task { get; set; } = default!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            /*
+            modelBuilder.Entity<Employee>()
+                .HasMany(c => c.Vacations)
+                .WithOne(e => e.Employees)
+                .HasForeignKey(v => v.EmployeeID)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+            */
+            /*
             // Configure the relationship between UserAsClient and Basket
             modelBuilder.Entity<UserAsClient>()
                 .HasOne(u => u.Basket) // Corrected navigation property
@@ -25,7 +40,7 @@ namespace SHoper.Data
             modelBuilder.Entity<Basket>()
       .HasMany(b => b.Item)
       .WithOne(i => i.Basket)
-      .HasForeignKey(i => i.BasketId);
+      .HasForeignKey(i => i.BasketId);*/
         }
 
 

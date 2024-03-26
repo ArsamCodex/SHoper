@@ -1,0 +1,29 @@
+﻿<!-- OpenForm.razor -->
+@page "/open-form"
+
+<button @onclick="ToggleFormVisibility">Open Form</button>
+
+@if (showForm)
+{
+    <form>
+        <!-- Your form fields here -->
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+
+        <!-- Add more form fields as needed -->
+
+        <button type="submit">Submit</button>
+    </form>
+}
+
+@code {
+    private bool showForm = false;
+
+    private void ToggleFormVisibility()
+    {
+        showForm = !showForm;
+    }
+}

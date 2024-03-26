@@ -1,0 +1,14 @@
+﻿@page "/overridden"
+<h3>Cascading Value Demo</h3>
+<CascadingValue Value=cascade>
+    <Child1></Child1>
+    <Child2></Child2>
+</CascadingValue>
+<button @onclick=update>Update in the parent</button>
+@code {
+    string cascade = DateTime.Now.ToLongTimeString();
+    void update()
+    {
+        cascade = DateTime.Now.ToLongTimeString();
+    }
+}
