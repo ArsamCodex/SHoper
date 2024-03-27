@@ -44,15 +44,17 @@ else
         int randomGenerateIndexNumber = random.Next(0, 37);
 
         var IncomingColor = GetColor(randomGenerateIndexNumber);
+        var EvvenOrOdd = CHeckEvenOrOod(randomGenerateIndexNumber);
+
         if (numbers.Contains(randomGenerateIndexNumber))
         {
-           
-            winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} ";
+
+            winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} + {EvvenOrOdd} ";
 
         }
         else
         {
-            winningNumberMessage = $"You have losed !  {randomGenerateIndexNumber} is the wining numnebr . Color IS {IncomingColor}";
+            winningNumberMessage = $"You have losed !  {randomGenerateIndexNumber} is the wining numnebr . Color IS {IncomingColor} + {EvvenOrOdd} ";
         }
 
         await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);
@@ -90,9 +92,26 @@ else
             case 34:
             case 36:
                 return Color.Red;
-                default:
+            default:
                 return Color.Black;
 
+        }
+     
+    }
+    public static string CHeckEvenOrOod(int number)
+    {
+        if (number == 0)
+        {
+            return "Number zero";
+
+        }
+        else if (number % 2 == 0)
+        {
+            return "Evven";
+        }
+        else
+        {
+            return "odd";
         }
     }
 }
