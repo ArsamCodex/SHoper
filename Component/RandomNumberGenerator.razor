@@ -1,7 +1,11 @@
 ﻿<h3>RandomNumberGenerator</h3>
+@inject SHoper.Data.ApplicationDbMyData _Context
 
+<button @onclick="setCredit">Get Credit</button>
 
-
+<br>
+<br />
+<br />
 @if (generatingNmber)
 {
     <img src="casino.jpg" als="Loading">
@@ -9,9 +13,17 @@
 else
 {
     <input type="text" @bind="userNumbers" placeholder="your bet please" />
-    <button @onclick="GenerateRandomNumber" disabled="@generatingNmber">Start</button>
+    <input type="text" @bind="BetAmount" placeholder="your bet Amount" />
+   
 }
 @winningNumberMessage
+<p>
+    Credit Is : @Credit
+</p>
+
+
+<button @onclick="GenerateRandomNumber" >Start</button>
+
 @code {
 
     [Parameter]
@@ -23,6 +35,19 @@ else
     private bool generatingNmber = false;
     public string userNumbers = "";
     public string winningNumberMessage = "";
+    public int BetAmount;
+    public int Credit = 100;
+
+
+    void setCredit()
+    {
+        if(Credit < 50)
+        {
+            Credit = 100;
+        }
+    }
+
+
 
     private async Task GenerateRandomNumber()
     {
@@ -43,18 +68,27 @@ else
         Random random = new Random();
         int randomGenerateIndexNumber = random.Next(0, 37);
 
+        _Context.IncomingNumber.Add(
+        new Model.IncomingNumber
+            {
+                DateTimeIn = DateTime.Now,
+                IncomingNumberT = randomGenerateIndexNumber,
+            });
+            _Context.SaveChangesAsync();
+
         var IncomingColor = GetColor(randomGenerateIndexNumber);
         var EvvenOrOdd = CHeckEvenOrOod(randomGenerateIndexNumber);
 
         if (numbers.Contains(randomGenerateIndexNumber))
         {
 
-            winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} + {EvvenOrOdd} ";
-
+            winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} + {EvvenOrOdd}  ";
+            Credit = BetAmount * 36;
         }
         else
         {
             winningNumberMessage = $"You have losed !  {randomGenerateIndexNumber} is the wining numnebr . Color IS {IncomingColor} + {EvvenOrOdd} ";
+            Credit = Credit - BetAmount;
         }
 
         await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);

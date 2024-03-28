@@ -11,6 +11,7 @@ namespace SHoper.Data
           : base(options)
         {
         }
+        public DbSet<IncomingNumber> IncomingNumber { get; set; } = default!;
         public DbSet<UserAsClient> UserAsClients { get; set; } = default!;
         public DbSet<Items> Items { get; set; } = default!;
 
