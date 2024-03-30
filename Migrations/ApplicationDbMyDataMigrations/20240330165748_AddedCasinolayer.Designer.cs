@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SHoper.Data;
 
@@ -11,9 +12,11 @@ using SHoper.Data;
 namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 {
     [DbContext(typeof(ApplicationDbMyData))]
-    partial class ApplicationDbMyDataModelSnapshot : ModelSnapshot
+    [Migration("20240330165748_AddedCasinolayer")]
+    partial class AddedCasinolayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,26 +43,6 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
                         .HasFilter("[UserAsClientId] IS NOT NULL");
 
                     b.ToTable("Baskets");
-                });
-
-            modelBuilder.Entity("SHoper.Model.CasinoUsers.CasinoPlayers", b =>
-                {
-                    b.Property<int>("CasinoPlayersID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CasinoPlayersID"));
-
-                    b.Property<int>("Credit")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Userid")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CasinoPlayersID");
-
-                    b.ToTable("CasinoPlayers");
                 });
 
             modelBuilder.Entity("SHoper.Model.Emplyee.Employee", b =>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SHoper.Model;
+using SHoper.Model.CasinoUsers;
 using SHoper.Model.Emplyee;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -12,6 +13,7 @@ namespace SHoper.Data
         {
         }
         public DbSet<IncomingNumber> IncomingNumber { get; set; } = default!;
+       public DbSet<CasinoPlayers> CasinoPlayers { get; set; } = default!;
         public DbSet<UserAsClient> UserAsClients { get; set; } = default!;
         public DbSet<Items> Items { get; set; } = default!;
 

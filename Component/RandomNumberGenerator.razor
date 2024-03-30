@@ -1,6 +1,17 @@
-﻿<h3>RandomNumberGenerator</h3>
-@inject SHoper.Data.ApplicationDbMyData _Context
+﻿@inject SHoper.Data.ApplicationDbMyData _Context
+@attribute [Authorize(Roles = "Admin,Player")]
+@inject UserManager<IdentityUser> UserManager
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore;
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
+<h5>Eu Roul</h5>
+
+<p>User ID : @userId</p>
+<br>
+<br />
+<br />
 <button @onclick="setCredit">Get Credit</button>
 
 <br>
@@ -37,7 +48,32 @@ else
     public string winningNumberMessage = "";
     public int BetAmount;
     public int Credit = 100;
+    private string userId;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userPrincipal = authState.User;
+
+        if (userPrincipal.Identity.IsAuthenticated)
+        {
+            var user = await UserManager.GetUserAsync(userPrincipal);
+            userId = user.Id.ToString();
+
+            bool userExists = await _Context.CasinoPlayers.AnyAsync(c => c.Userid == userId);
+            CreditLoad();
+            if (!userExists)
+            {
+                _Context.CasinoPlayers.Add(new Model.CasinoUsers.CasinoPlayers
+                    {
+                        Userid = userId,
+                        Credit = Credit,
+                    });
+                await _Context.SaveChangesAsync();
+            }
+
+        }
+    }
 
     void setCredit()
     {
@@ -46,9 +82,6 @@ else
             Credit = 100;
         }
     }
-
-
-
     private async Task GenerateRandomNumber()
     {
         generatingNmber = true;
@@ -74,7 +107,7 @@ else
                 DateTimeIn = DateTime.Now,
                 IncomingNumberT = randomGenerateIndexNumber,
             });
-            _Context.SaveChangesAsync();
+        await _Context.SaveChangesAsync();
 
         var IncomingColor = GetColor(randomGenerateIndexNumber);
         var EvvenOrOdd = CHeckEvenOrOod(randomGenerateIndexNumber);
@@ -84,11 +117,19 @@ else
 
             winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} + {EvvenOrOdd}  ";
             Credit = BetAmount * 36;
+            var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
+            user.Credit = Credit;
+            await _Context.SaveChangesAsync();
+
         }
         else
         {
             winningNumberMessage = $"You have losed !  {randomGenerateIndexNumber} is the wining numnebr . Color IS {IncomingColor} + {EvvenOrOdd} ";
             Credit = Credit - BetAmount;
+            var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
+            user.Credit = Credit;
+            await _Context.SaveChangesAsync();
+
         }
 
         await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);
@@ -130,7 +171,7 @@ else
                 return Color.Black;
 
         }
-     
+
     }
     public static string CHeckEvenOrOod(int number)
     {
@@ -147,6 +188,11 @@ else
         {
             return "odd";
         }
+    }
+    void CreditLoad()
+    {
+        var LoadFor = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
+        Credit = LoadFor.Credit;
     }
 }
 

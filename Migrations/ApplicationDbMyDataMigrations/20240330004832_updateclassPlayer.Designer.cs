@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SHoper.Data;
 
@@ -11,9 +12,11 @@ using SHoper.Data;
 namespace SHoper.Migrations.ApplicationDbMyDataMigrations
 {
     [DbContext(typeof(ApplicationDbMyData))]
-    partial class ApplicationDbMyDataModelSnapshot : ModelSnapshot
+    [Migration("20240330004832_updateclassPlayer")]
+    partial class updateclassPlayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,9 +56,8 @@ namespace SHoper.Migrations.ApplicationDbMyDataMigrations
                     b.Property<int>("Credit")
                         .HasColumnType("int");
 
-                    b.Property<string>("Userid")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CasinoPlayersID");
 
