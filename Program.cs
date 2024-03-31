@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SHoper.Areas.Identity;
 using SHoper.Data;
 using SHoper.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddMudServices();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
