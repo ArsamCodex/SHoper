@@ -16,6 +16,7 @@
 </p>
 <br />
 <br />
+<MudButton Variant="Variant.Filled" @onclick="setCredit">Get Free Credit</MudButton>
 <br />
 
  
@@ -27,7 +28,7 @@
  
     }
 <br />
-<MudButton Variant="Variant.Filled" @onclick="setCredit">Get Free Credit</MudButton>
+
 <br>
 <br />
 <br />
@@ -37,6 +38,7 @@
 }
 else
 {
+    <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
 
     <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
 }
@@ -48,11 +50,7 @@ else
 @Basic_CheckBox1
 @Basic_CheckBox2
 
-@foreach (var entry in numbersClicked)
-{
-    <p>@($"{entry.Key}: {(entry.Value)}"),</p>
 
-}
 
 
 <MudButton Variant="Variant.Filled" @onclick="GenerateRandomNumber">Spin</MudButton>
@@ -61,7 +59,7 @@ else
     public bool Basic_CheckBox1 { get; set; } = false;
     public bool Basic_CheckBox2 { get; set; } = false;
 
-    private List<string> clickResults = new List<string>();
+
     [Parameter]
     public EventCallback<int> OnRandomGenerated { get; set; }
     [Parameter]
@@ -74,25 +72,14 @@ else
     public int Credit = 100;
     private string userId;
     private int[] clickCounts = new int[38];
-    private Dictionary<int, int> numbersClicked = new Dictionary<int, int>(); // Dictionary to store count of each number clicked
 
-    private void UpdateNumbersClicked(int number)
-    {
-        if (numbersClicked.ContainsKey(number))
-        {
-            numbersClicked[number]++;
-        }
-        else
-        {
-            numbersClicked[number] = 1;
-        }
-    }
+
     private void IncrementCount(int number)
     {
         clickCounts[number]++; // Increment the count for the clicked button
-        clickResults.Add($"Button {number} clicked {clickCounts[number]} times.");
-        userNumbers += number.ToString() + ",";
-        UpdateNumbersClicked(number);
+
+        userNumbers += number.ToString() + ",\n";
+        Console.WriteLine(userNumbers);
     }
     protected override async Task OnInitializedAsync()
     {
@@ -132,8 +119,13 @@ else
 
         await Task.Delay(5000);
 
+
         string[] numbersArray = userNumbers.Split(',');
-   
+
+
+
+
+
         List<int> numbers = new List<int>();
 
         foreach (string numberString in numbersArray)
@@ -160,9 +152,11 @@ else
 
         if (numbers.Contains(randomGenerateIndexNumber))
         {
+            var tottalBet = CountOccurrences(numbers, randomGenerateIndexNumber);
+            Console.WriteLine(tottalBet);
 
             winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} + {EvvenOrOdd}  ";
-            Credit = BetAmount * 36;
+            Credit += tottalBet * 36;
             var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
             user.Credit = Credit;
             await _Context.SaveChangesAsync();
@@ -241,7 +235,21 @@ else
         Credit = LoadFor.Credit;
     }
   
+    static int CountOccurrences(List<int> numbers, int numberToCount)
+    {
+        int count = 0;
 
+        // Count occurrences of the specified number
+        foreach (int num in numbers)
+        {
+            if (num == numberToCount)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
 
 }
 
