@@ -9,7 +9,6 @@
 <style>
     .container {
         display: flex;
-
     }
 </style>
 <h5>Eu Roul</h5>
@@ -19,12 +18,13 @@
     Credit : @Credit
 </p>
 <br />
-<p>Stake : @TottalStake</p>
-<br />
+<p>Numbers Stake : @TottalStake</p>
 <p> Even Number Count :@EvenCounter</p>
 <p>Ood Numbers Count :@OodCounter</p>
 <p>Red Counter : @RedTottalStake</p>
 <p>Black Counter :@BlackTottalStake</p>
+<p>Tottal Staked Bet :@AllBets</p>
+
 
 <br />
 @{
@@ -32,65 +32,81 @@
     var numbersColumn2 = Enumerable.Range(1, 12).Select(x => x * 3 - 1).ToList();
     var numbersColumn3 = Enumerable.Range(0, 12).Select(x => x * 3 + 1);
 }
-<div class ="container">
+<div class="container">
 
-<div>
-    <button style="height:110px;width:60px;border:2px solid black" @onclick="() => IncrementCount(0)">
-        @($"0({(clickCounts.Length > 0 ? clickCounts[0] : 0)})")
-    </button>
-</div>
+    <div>
+        <button style="height:110px;width:60px;border:2px solid black" @onclick="() => IncrementCount(0)">
+            @($"0({(clickCounts.Length > 0 ? clickCounts[0] : 0)})")
+        </button>
+    </div>
 
-<div>
-    <div class="row">
-        <div class="col" style=" width: auto">
-            <div class="d-flex flex-row">
-                @foreach (var number in numbersColumn1)
+    <div>
+        <div class="row">
+            <div class="col" style=" width: auto">
+                <div class="d-flex flex-row">
+                    @foreach (var number in numbersColumn1)
+                    {
+                        <MudButtonGroup Variant="Variant.Outlined">
+                            <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                                @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
+                            </MudButton>
+                        </MudButtonGroup>
+                    }
+                </div>
+            </div>
+
+        </div>
+        <div class="col">
+            <div class="d-flex flex-row" style=" width: auto">
+                @foreach (var number in numbersColumn2)
                 {
-                    <MudButtonGroup Variant="Variant.Outlined">
-                        <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
-                            @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
-                        </MudButton>
-                    </MudButtonGroup>
+                    if (number < clickCounts.Length)
+                    {
+                        var countIndex = number >= 0 ? number : 0;
+                        <MudButtonGroup Variant="Variant.Outlined">
+                            <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                                @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
+                            </MudButton>
+                        </MudButtonGroup>
+                    }
                 }
             </div>
         </div>
+        <div class="col">
+            <div class="d-flex flex-row" style=" width: auto">
+                @foreach (var number in numbersColumn3)
+                {
+                    if (number < clickCounts.Length)
+                    {
+                        var countIndex = number >= 0 ? number : 0;
+                        <MudButtonGroup Variant="Variant.Outlined">
+                            <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                                @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
+                            </MudButton>
+                        </MudButtonGroup>
+                    }
+                }
+            </div>
+           
+        </div>
+       
 
     </div>
-    <div class="col">
-        <div class="d-flex flex-row" style=" width: auto">
-            @foreach (var number in numbersColumn2)
-            {
-                if (number < clickCounts.Length)
-                {
-                    var countIndex = number >= 0 ? number : 0;
-                    <MudButtonGroup Variant="Variant.Outlined">
-                        <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
-                            @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
-                        </MudButton>
-                    </MudButtonGroup>
-                }
-            }
-        </div>
-    </div>
-    <div class="col">
-        <div class="d-flex flex-row" style=" width: auto">
-            @foreach (var number in numbersColumn3)
-            {
-                if (number < clickCounts.Length)
-                {
-                    var countIndex = number >= 0 ? number : 0;
-                    <MudButtonGroup Variant="Variant.Outlined">
-                        <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
-                            @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
-                        </MudButton>
-                    </MudButtonGroup>
-                }
-            }
-        </div>
+    <div class="d-flex flex-row" style="float:right">
+        <MudButtonGroup Variant="Variant.Outlined" VerticalAlign="true">
+            <MudButton Style="background-color:#90EE90">2 To 1</MudButton>
+            <MudButton Style="background-color:#90EE90">2 To 1</MudButton>
+            <MudButton Style="background-color:#90EE90">2 To 1</MudButton>
+        </MudButtonGroup>
     </div>
 
 </div>
-</div>
+
+
+
+
+
+
 <div style="margin-left: 300px;">
     <button @onclick="() => EvenCOunter2()" style="padding: 10px 20px; margin: 5px; color: black; border:  2px solid black; border-radius: 5px; cursor: pointer; ">Even @EvenCounter </button>
     <button @onclick="() => OodCOunter2()" style="padding: 10px 20px; margin: 5px;  color: black; border: 2px solid black; border-radius: 5px; cursor: pointer;">Ood @OodCounter</button>
@@ -107,8 +123,8 @@
 }
 else
 {
-  // <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
-   // <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+    // <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+    // <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
 }
 
 
@@ -120,7 +136,7 @@ else
 @code {
 
 
-    public int EvenCounter;    
+    public int EvenCounter;
     public int OodCounter;
     public int BlackCounter;
     public int RedCounter;
@@ -142,7 +158,7 @@ else
     public int OOdTottalStake;
     public int EvenTottalStake;
     List<int> numbers = new List<int>();
-
+    private int AllBets;
 
     private void IncrementCount(int number)
     {
@@ -197,6 +213,7 @@ else
     }
     private async Task GenerateRandomNumber()
     {
+        AllBets = TottalStake + EvenCounter + OodCounter + RedTottalStake + BlackTottalStake;
         generatingNmber = true;
         await GenerationNumberChanged.InvokeAsync(true);
         await Task.Delay(5000);
@@ -272,6 +289,7 @@ else
         await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);
         generatingNmber = false;
         await GenerationNumberChanged.InvokeAsync(false);
+
 
     }
     public enum Color
@@ -377,62 +395,29 @@ else
 
         return totalCount;
     }
-    void EvenCOunter2(){
+    void EvenCOunter2()
+    {
         EvenCounter++;
-        string[] numbersArray = userNumbers.Split(',');
-        List<int> numbers = new List<int>();
-        foreach (string numberString in numbersArray)
-        {
-            if (int.TryParse(numberString.Trim(), out int number2))
-            {
-                numbers.Add(number2);
-            }
-        }
-        EvenTottalStake = EvenCounter ;
+        EvenTottalStake = EvenCounter;
         Credit = Credit - 1;
     }
     void OodCOunter2()
     {
         OodCounter++;
-        string[] numbersArray = userNumbers.Split(',');
-        List<int> numbers = new List<int>();
-        foreach (string numberString in numbersArray)
-        {
-            if (int.TryParse(numberString.Trim(), out int number2))
-            {
-                numbers.Add(number2);
-            }
-        }
         Credit = Credit - 1;
         OOdTottalStake = OodCounter;
     }
     void RedCounterT()
     {
         RedCounter++;
-        string[] numbersArray = userNumbers.Split(',');
-        List<int> numbers = new List<int>();
-        foreach (string numberString in numbersArray)
-        {
-            if (int.TryParse(numberString.Trim(), out int number2))
-            {
-                numbers.Add(number2);
-            }
-        }
+
         Credit = Credit - 1;
         RedTottalStake = RedCounter;
     }
     void BlackCounterT()
     {
         BlackCounter++;
-        string[] numbersArray = userNumbers.Split(',');
-        List<int> numbers = new List<int>();
-        foreach (string numberString in numbersArray)
-        {
-            if (int.TryParse(numberString.Trim(), out int number2))
-            {
-                numbers.Add(number2);
-            }
-        }
+
         Credit = Credit - 1;
         BlackTottalStake = BlackCounter;
     }
