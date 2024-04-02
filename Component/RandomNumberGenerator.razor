@@ -6,27 +6,102 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+<style>
+    .container {
+        display: flex;
 
+    }
+
+     
+</style>
 <h5>Eu Roul</h5>
 
-<p>User ID : @userId</p>
+<p>User ID : @userId</p><p><MudButton Variant="Variant.Filled" @onclick="setCredit">Get Free Credit</MudButton></p>
 <br>
 <p>
     Credit : @Credit
 </p>
 <br />
 <br />
-<MudButton Variant="Variant.Filled" @onclick="setCredit">Get Free Credit</MudButton>
+
 <br />
 
- 
-    @foreach (var number in Enumerable.Range(0, 37))
+@{
+    var numbersColumn1 = Enumerable.Range(1, 12).Select(x => x * 3).Where(x => x <= 36);
+    var numbersColumn2 = Enumerable.Range(1, 11).Select(x => x * 3 - 1).ToList();
+    if (!numbersColumn2.Contains(35))
     {
-    <MudButtonGroup Variant="Variant.Outlined">
-        <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">@(number.ToString() + " (" + clickCounts[number] + ")")</MudButton>
-    </MudButtonGroup>
- 
+        numbersColumn2.Add(35);
     }
+    var numbersColumn3 = Enumerable.Range(0, 12).Select(x => x * 3 + 1);
+
+}
+<div class ="container">
+
+<div>
+
+    <button style="height:110px;width:60px;border:2px solid black" @onclick="() => IncrementCount(0)">
+        @($"0({(clickCounts.Length > 0 ? clickCounts[0] : 0)})")
+    </button>
+</div>
+
+<div>
+    <div class="row">
+        <div class="col" style=" width: auto">
+            <div class="d-flex flex-row">
+                @foreach (var number in numbersColumn1)
+                {
+                    <MudButtonGroup Variant="Variant.Outlined">
+                        <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                            @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
+                        </MudButton>
+                    </MudButtonGroup>
+                }
+            </div>
+        </div>
+
+    </div>
+    <div class="col">
+        <div class="d-flex flex-row" style=" width: auto">
+            @foreach (var number in numbersColumn2)
+            {
+                if (number < clickCounts.Length)
+                {
+                    var countIndex = number >= 0 ? number : 0;
+                    <MudButtonGroup Variant="Variant.Outlined">
+                        <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                            @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
+                        </MudButton>
+                    </MudButtonGroup>
+                }
+            }
+        </div>
+    </div>
+    <div class="col">
+        <div class="d-flex flex-row" style=" width: auto">
+            @foreach (var number in numbersColumn3)
+            {
+                if (number < clickCounts.Length)
+                {
+                    var countIndex = number >= 0 ? number : 0;
+                    <MudButtonGroup Variant="Variant.Outlined">
+                        <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                            @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
+                        </MudButton>
+                    </MudButtonGroup>
+                }
+            }
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+
+
+
+
 <br />
 
 <br>
@@ -39,7 +114,6 @@
 else
 {
     <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
-
     <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
 }
 <MudCheckBox @bind-Value="@Basic_CheckBox1" Label="Even"></MudCheckBox>
@@ -149,7 +223,7 @@ else
             Console.WriteLine(tottalBet);
 
             winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} + {EvvenOrOdd}  ";
-            Credit = Credit+ (tottalBet * 36);
+            Credit = Credit + (tottalBet * 36);
             var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
             user.Credit = Credit;
             await _Context.SaveChangesAsync();
@@ -228,7 +302,7 @@ else
         var LoadFor = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
         Credit = LoadFor.Credit;
     }
-  
+
     static int CountOccurrences(List<int> numbers, int numberToCount)
     {
         int count = 0;
