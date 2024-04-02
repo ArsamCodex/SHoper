@@ -28,11 +28,7 @@
 
 @{
     var numbersColumn1 = Enumerable.Range(1, 12).Select(x => x * 3).Where(x => x <= 36);
-    var numbersColumn2 = Enumerable.Range(1, 11).Select(x => x * 3 - 1).ToList();
-    if (!numbersColumn2.Contains(35))
-    {
-        numbersColumn2.Add(35);
-    }
+    var numbersColumn2 = Enumerable.Range(1, 12).Select(x => x * 3 - 1).ToList();
     var numbersColumn3 = Enumerable.Range(0, 12).Select(x => x * 3 + 1);
 
 }
@@ -96,14 +92,7 @@
 
 </div>
 </div>
-
-
-
-
-
-
 <br />
-
 <br>
 <br />
 <br />
@@ -113,8 +102,8 @@
 }
 else
 {
-    <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
-    <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+   // <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+   // <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
 }
 <MudCheckBox @bind-Value="@Basic_CheckBox1" Label="Even"></MudCheckBox>
 <MudCheckBox @bind-Value="@Basic_CheckBox2" Label="Ödd"></MudCheckBox>
