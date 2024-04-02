@@ -104,14 +104,12 @@
 }
 else
 {
-   <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+  // <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
    // <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
 }
 
 
 @winningNumberMessage
-
-
 
 
 
@@ -138,6 +136,7 @@ else
     private int TottalStake;
     List<int> numbers = new List<int>();
 
+
     private void IncrementCount(int number)
     {
         clickCounts[number]++; // Increment the count for the clicked button
@@ -154,6 +153,7 @@ else
                 numbers.Add(number2);
             }
         }
+        Credit = Credit - 1;
         TottalStake = numbers.Count;
 
     }
@@ -225,6 +225,7 @@ else
             Console.WriteLine(tottalBet);
 
             winningNumberMessage = $"COngrats ! {randomGenerateIndexNumber} is the wining numnebr . Color Is {IncomingColor} + {EvvenOrOdd}  ";
+
             Credit = Credit + (tottalBet * 36);
             var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
             user.Credit = Credit;
@@ -235,12 +236,35 @@ else
         {
             winningNumberMessage = $"You have losed !  {randomGenerateIndexNumber} is the wining numnebr . Color IS {IncomingColor} + {EvvenOrOdd} ";
             var loosingPsitionBet = CountRepeatedNumbers(numbers);
+
+
+
             Credit = Credit - loosingPsitionBet;
             var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
             user.Credit = Credit;
             await _Context.SaveChangesAsync();
 
         }
+        if (CHeckEvenOrOod(randomGenerateIndexNumber) == "Even")
+        {
+            var NewCredit = 0;
+            NewCredit = EvenCounter * 2;
+            Credit = Credit + NewCredit;
+            var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
+            user.Credit = Credit;
+            await _Context.SaveChangesAsync();
+        }
+        if (CHeckEvenOrOod(randomGenerateIndexNumber) == "odd")
+        {
+            var NewCredit = 0;
+            NewCredit = OodCounter * 2;
+            Credit = Credit + NewCredit;
+            var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
+            user.Credit = Credit;
+            await _Context.SaveChangesAsync();
+        }
+
+
 
         await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);
         generatingNmber = false;
@@ -287,12 +311,12 @@ else
     {
         if (number == 0)
         {
-            return "Number zero";
+            return " 0";
 
         }
         else if (number % 2 == 0)
         {
-            return "Evven";
+            return "Even";
         }
         else
         {
@@ -352,10 +376,12 @@ else
     }
     void EvenCOunter2(){
         EvenCounter++;
+        Credit = Credit - 1;
     }
     void OodCOunter2()
     {
         OodCounter++;
+        Credit = Credit - 1;
     }
 
 }
