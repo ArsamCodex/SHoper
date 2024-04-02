@@ -21,6 +21,8 @@
 <br />
 <p>Stake : @TottalStake</p>
 <br />
+<p> Even Number Count :@EvenCounter</p>
+<p>Ood Numbers Count :@OodCounter</p>
 <br />
 @{
     var numbersColumn1 = Enumerable.Range(1, 12).Select(x => x * 3).Where(x => x <= 36);
@@ -86,6 +88,12 @@
 
 </div>
 </div>
+<div style="margin-left: 300px;">
+    <button @onclick="() => EvenCOunter2()" style="padding: 10px 20px; margin: 5px; color: black; border:  2px solid black; border-radius: 5px; cursor: pointer; ">Even @EvenCounter </button>
+    <button @onclick="() => OodCOunter2()" style="padding: 10px 20px; margin: 5px;  color: black; border: 2px solid black; border-radius: 5px; cursor: pointer;">Ood @OodCounter</button>
+    <button style="padding: 10px 20px; margin: 5px;  color:  Black;background-color: #FF0000; border: 2px solid; border-radius: 5px; cursor: pointer;">Red</button>
+    <button style="padding: 10px 20px; margin: 5px;  color: White;background-color: 	#000000; border: 2px solid; border-radius: 5px; cursor: pointer;">Black</button>
+</div>
 <br />
 <br>
 <br />
@@ -99,13 +107,10 @@ else
    <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
    // <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
 }
-<MudCheckBox @bind-Value="@Basic_CheckBox1" Label="Even"></MudCheckBox>
-<MudCheckBox @bind-Value="@Basic_CheckBox2" Label="Ödd"></MudCheckBox>
+
 
 @winningNumberMessage
 
-@Basic_CheckBox1
-@Basic_CheckBox2
 
 
 
@@ -116,7 +121,8 @@ else
     public bool Basic_CheckBox1 { get; set; } = false;
     public bool Basic_CheckBox2 { get; set; } = false;
 
-
+    public int EvenCounter;    
+    public int OodCounter;
     [Parameter]
     public EventCallback<int> OnRandomGenerated { get; set; }
     [Parameter]
@@ -189,7 +195,7 @@ else
         await Task.Delay(5000);
         string[] numbersArray = userNumbers.Split(',');
 
-        
+
 
         foreach (string numberString in numbersArray)
         {
@@ -343,6 +349,13 @@ else
         }
 
         return totalCount;
+    }
+    void EvenCOunter2(){
+        EvenCounter++;
+    }
+    void OodCOunter2()
+    {
+        OodCounter++;
     }
 
 }
