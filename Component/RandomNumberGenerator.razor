@@ -11,31 +11,25 @@
         display: flex;
 
     }
-
-     
 </style>
 <h5>Eu Roul</h5>
-
 <p>User ID : @userId</p><p><MudButton Variant="Variant.Filled" @onclick="setCredit">Get Free Credit</MudButton></p>
 <br>
 <p>
     Credit : @Credit
 </p>
 <br />
+<p>Stake : @TottalStake</p>
 <br />
-
 <br />
-
 @{
     var numbersColumn1 = Enumerable.Range(1, 12).Select(x => x * 3).Where(x => x <= 36);
     var numbersColumn2 = Enumerable.Range(1, 12).Select(x => x * 3 - 1).ToList();
     var numbersColumn3 = Enumerable.Range(0, 12).Select(x => x * 3 + 1);
-
 }
 <div class ="container">
 
 <div>
-
     <button style="height:110px;width:60px;border:2px solid black" @onclick="() => IncrementCount(0)">
         @($"0({(clickCounts.Length > 0 ? clickCounts[0] : 0)})")
     </button>
@@ -102,7 +96,7 @@
 }
 else
 {
-   // <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+   <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
    // <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
 }
 <MudCheckBox @bind-Value="@Basic_CheckBox1" Label="Even"></MudCheckBox>
@@ -135,14 +129,27 @@ else
     public int Credit = 100;
     private string userId;
     private int[] clickCounts = new int[38];
-
+    private int TottalStake;
+    List<int> numbers = new List<int>();
 
     private void IncrementCount(int number)
     {
         clickCounts[number]++; // Increment the count for the clicked button
 
         userNumbers += number.ToString() + ",\n";
-        Console.WriteLine(userNumbers);
+        string[] numbersArray = userNumbers.Split(',');
+
+
+        List<int> numbers = new List<int>();
+        foreach (string numberString in numbersArray)
+        {
+            if (int.TryParse(numberString.Trim(), out int number2))
+            {
+                numbers.Add(number2);
+            }
+        }
+        TottalStake = numbers.Count;
+
     }
     protected override async Task OnInitializedAsync()
     {
@@ -182,7 +189,7 @@ else
         await Task.Delay(5000);
         string[] numbersArray = userNumbers.Split(',');
 
-        List<int> numbers = new List<int>();
+        
 
         foreach (string numberString in numbersArray)
         {
