@@ -33,10 +33,10 @@
 
 
 <div style="border:2px solid black;width:250px">
-<p>Numbers Stake : @TottalStake</p>
-<p>Tottal Staked Bet :@AllBets</p>
+    <p>Numbers Stake : @TottalStake</p>
+    <p>Tottal Staked Bet :@AllBets</p>
 </div>
-   
+
 
 <center><h3>  @winningNumberMessage</h3></center>
 <br />
@@ -124,16 +124,16 @@
                     }
                 }
             </div>
-           
+
         </div>
-       
+
 
     </div>
     <div class="d-flex flex-row" style="float:right">
         <MudButtonGroup Variant="Variant.Outlined" VerticalAlign="true">
-            <MudButton Style="background-color:#90EE90">2 To 1</MudButton>
-            <MudButton Style="background-color:#90EE90">2 To 1</MudButton>
-            <MudButton Style="background-color:#90EE90">2 To 1</MudButton>
+            <MudButton @onclick="() => TwoToOne()" Style="background-color:#90EE90">2 To 1</MudButton>
+            <MudButton @onclick="() => TwoToTwo()" Style="background-color:#90EE90">2 To 2</MudButton>
+            <MudButton @onclick="() => TwoToThree()" Style="background-color:#90EE90">2 To 3</MudButton>
         </MudButtonGroup>
     </div>
 
@@ -182,7 +182,7 @@ else
     private bool generatingNmber = false;
     public string userNumbers = "";
     public string winningNumberMessage = "";
-    public int BetAmount;
+
     public int Credit = 100;
     private string userId;
     private int[] clickCounts = new int[38];
@@ -193,7 +193,9 @@ else
     public int EvenTottalStake;
     List<int> numbers = new List<int>();
     private int AllBets;
-
+    private int TwoToOne1;
+    private int TwoToTwo2;
+    private int TwoToThree3;
     private void IncrementCount(int number)
     {
         clickCounts[number]++; // Increment the count for the clicked button
@@ -247,7 +249,7 @@ else
     }
     private async Task GenerateRandomNumber()
     {
-        AllBets = TottalStake + EvenCounter + OodCounter + RedTottalStake + BlackTottalStake;
+        AllBets = TottalStake + EvenCounter + OodCounter + RedTottalStake + BlackTottalStake + TwoToOne1 + TwoToTwo2 + TwoToThree3;
         generatingNmber = true;
         await GenerationNumberChanged.InvokeAsync(true);
         await Task.Delay(5000);
@@ -317,13 +319,37 @@ else
             user.Credit = Credit;
             await _Context.SaveChangesAsync();
         }
-
+        if (TwoToOne1 > 0 && TwotoNumbersReward(randomGenerateIndexNumber) == "TwoToOne")
+        {
+            var betTimes3 = TwoToOne1 * 3;
+            Credit = Credit + betTimes3;
+            var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
+            user.Credit = Credit;
+            await _Context.SaveChangesAsync();
+        }
+        if (TwoToTwo2 > 0 && TwotoNumbersReward(randomGenerateIndexNumber) == "TwoToTwo")
+        {
+            var betTimes3 = TwoToTwo2 * 3;
+            Credit = Credit + betTimes3;
+            var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
+            user.Credit = Credit;
+            await _Context.SaveChangesAsync();
+        }
+        if (TwoToThree3 > 0 && TwotoNumbersReward(randomGenerateIndexNumber) == "TwoToThree")
+        {
+            var betTimes3 = TwoToThree3 * 3;
+            Credit = Credit + betTimes3;
+            var user = _Context.CasinoPlayers.FirstOrDefault(c => c.Userid == userId);
+            user.Credit = Credit;
+            await _Context.SaveChangesAsync();
+        }
 
 
         await OnRandomGenerated.InvokeAsync(randomGenerateIndexNumber);
         generatingNmber = false;
         await GenerationNumberChanged.InvokeAsync(false);
 
+        ResetCount();
 
     }
     public enum Color
@@ -455,10 +481,81 @@ else
         Credit = Credit - 1;
         BlackTottalStake = BlackCounter;
     }
+    void TwoToOne()
+    {
+        TwoToOne1++;
+        Credit = Credit - 1;
+    }
+    void TwoToTwo()
+    {
+        TwoToTwo2++;
+        Credit = Credit - 1;
+    }
+    void TwoToThree()
+    {
+        TwoToThree3++;
+        Credit = Credit - 1;
+    }
+    public static string TwotoNumbersReward(int number)
+    {
+        switch (number)
+        {
+            case 0:
+                return "0";
+
+            case 3:
+            case 6:
+            case 9:
+            case 12:
+            case 15:
+            case 18:
+            case 21:
+            case 24:
+            case 27:
+            case 30:
+            case 36:
+                return "TwoToOne";
+
+            case 2:
+            case 5:
+            case 8:
+            case 11:
+            case 14:
+            case 17:
+            case 20:
+            case 23:
+            case 26:
+            case 39:
+            case 32:
+                return "TwoToTwo";
+            case 1:
+            case 4:
+            case 7:
+            case 10:
+            case 13:
+            case 16:
+            case 19:
+            case 22:
+            case 25:
+            case 28:
+            case 31:
+                return "TwoToThree";
+            default:
+                return "None";
+
+        }
 
 
-
-  
-
+    }
+    void ResetCount()
+    {
+        for (int i = 0; i < clickCounts.Length; i++)
+        {
+            clickCounts[i] = 0;
+        }
+        TottalStake = 0;
+        numbers.Clear();
+        AllBets = 0;
+    }
 }
 
