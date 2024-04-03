@@ -11,21 +11,34 @@
         display: flex;
     }
 </style>
-<h5>Eu Roul</h5>
+
+<div style="float:right;border:2px solid black">
+    @if (generatingNmber)
+    {
+        <img src="rv4.gif" als="Loading">
+
+    }
+
+</div>
 <p>User ID : @userId</p><p><MudButton Variant="Variant.Filled" @onclick="setCredit">Get Free Credit</MudButton></p>
-<br>
+
 <p>
     Credit : @Credit
 </p>
 <br />
+
+
+
+
+
+
+<div style="border:2px solid black;width:250px">
 <p>Numbers Stake : @TottalStake</p>
-<p> Even Number Count :@EvenCounter</p>
-<p>Ood Numbers Count :@OodCounter</p>
-<p>Red Counter : @RedTottalStake</p>
-<p>Black Counter :@BlackTottalStake</p>
 <p>Tottal Staked Bet :@AllBets</p>
+</div>
+   
 
-
+<center><h3>  @winningNumberMessage</h3></center>
 <br />
 @{
     var numbersColumn1 = Enumerable.Range(1, 12).Select(x => x * 3).Where(x => x <= 36);
@@ -35,7 +48,7 @@
 <div class="container">
 
     <div>
-        <button style="height:110px;width:60px;border:2px solid black" @onclick="() => IncrementCount(0)">
+        <button style="height:110px;width:60px;border:2px solid black;background-color:#90EE90" @onclick="() => IncrementCount(0)">
             @($"0({(clickCounts.Length > 0 ? clickCounts[0] : 0)})")
         </button>
     </div>
@@ -47,7 +60,15 @@
                     @foreach (var number in numbersColumn1)
                     {
                         <MudButtonGroup Variant="Variant.Outlined">
-                            <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                            @{
+                                // Check if the number meets the criteria for a red background color
+                                var isRedBackground = number == 3 || number == 9 || number == 12 || number == 18 || number == 21 || number == 27 || number == 30 || number == 36;
+                                // Check if the number meets the criteria for a black background color
+                                var isBlackBackground = number == 6 || number == 15 || number == 24 || number == 33;
+                            }
+                            <MudButton Variant="Variant.Filled"
+                            @onclick="() => IncrementCount(number)"
+                                       style="@($"background-color: {(isRedBackground ? "red" : (isBlackBackground ? "black" : "transparent"))};")">
                                 @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
                             </MudButton>
                         </MudButtonGroup>
@@ -64,7 +85,15 @@
                     {
                         var countIndex = number >= 0 ? number : 0;
                         <MudButtonGroup Variant="Variant.Outlined">
-                            <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                            @{
+                                // Check if the number meets the criteria for a red background color
+                                var isRedBackground = number == 5 || number == 14 || number == 23 || number == 32;
+                                // Check if the number meets the criteria for a black background color
+                                var isBlackBackground = number == 2 || number == 8 || number == 11 || number == 17 || number == 20 || number == 26 || number == 29 || number == 35;
+                            }
+                            <MudButton Variant="Variant.Filled"
+                            @onclick="() => IncrementCount(number)"
+                                       style="@($"background-color: {(isRedBackground ? "red" : (isBlackBackground ? "black" : "transparent"))};")">
                                 @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
                             </MudButton>
                         </MudButtonGroup>
@@ -80,7 +109,15 @@
                     {
                         var countIndex = number >= 0 ? number : 0;
                         <MudButtonGroup Variant="Variant.Outlined">
-                            <MudButton Variant="Variant.Filled" @onclick="() => IncrementCount(number)">
+                            @{
+                                // Check if the number meets the criteria for a red background color
+                                var isRedBackground = number == 1 || number == 7 || number == 16 || number == 19 || number == 25 || number == 34;
+                                // Check if the number meets the criteria for a black background color
+                                var isBlackBackground = number == 4 || number == 10 || number == 13 || number == 22 || number == 28 || number == 31;
+                            }
+                            <MudButton Variant="Variant.Filled"
+                            @onclick="() => IncrementCount(number)"
+                                       style="@($"background-color: {(isRedBackground ? "red" : (isBlackBackground ? "black" : "transparent"))};")">
                                 @($"{number} ({(clickCounts.Length > number ? clickCounts[number] : 0)})")
                             </MudButton>
                         </MudButtonGroup>
@@ -117,18 +154,15 @@
 <br>
 <br />
 <br />
-@if (generatingNmber)
-{
-    <img src="casino.jpg" als="Loading">
-}
+<!---
 else
 {
-    // <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
-    // <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
-}
+     <MudTextField @bind-Value="userNumbers" Label="CHoose numbers $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+    <MudTextField @bind-Value="BetAmount" Label="Bet Amount $$" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+}-->
 
 
-@winningNumberMessage
+
 
 
 <MudButton Variant="Variant.Filled" @onclick="GenerateRandomNumber">Spin</MudButton>
@@ -421,6 +455,10 @@ else
         Credit = Credit - 1;
         BlackTottalStake = BlackCounter;
     }
+
+
+
+  
 
 }
 
